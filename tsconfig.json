@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+    "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+  },
+  "include": [
+    "**/*.ts*"
+  ],
+  "exclude": [
+    "node_modules",
+    "_old",
+  ]
+}
