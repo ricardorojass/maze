@@ -18,9 +18,9 @@ function createRobot (p: number[]): IRobot {
     return battery
   }
 
-  function setBattery (value: number): IPosition {
+  function setBattery (value: number): number {
     battery = value
-    return position
+    return battery
   }
 
   return {
