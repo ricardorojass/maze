@@ -65,22 +65,69 @@ function getRewards (): boolean[][] {
 }
 
 function moveUp (): string {
-  // validate walls, rewards && bombs
-  // set the new position
-  // robot.getPosition()
-  return MoveResult.InValidMove
+  const position = robot.getPosition()
+  const isThereWall = maze[position.x-1][position.y] ? true : false
+
+  if (isThereWall) {
+    throw new Error(MoveResult.InValidMove)
+  } else {
+    const nextPosition = { x: position.x-1, y: position.y }
+    let robotBattery = robot.getBattery()
+    if (isThereReward(nextPosition)) {
+      robotBattery += 1
+      robot.setBattery(robotBattery)
+    }
+    if (isThereBomb(nextPosition)) {
+      robotBattery -= 1
+      robot.setBattery(robotBattery)
+    }
+    robot.setPosition(nextPosition)
+    throw new Error(MoveResult.ValidMove)
+  }
 }
 
 function moveDown (): string {
-  // validate walls, rewards && bombs
-  // set the new position
-  return MoveResult.InValidMove
+  const position = robot.getPosition()
+  const isThereWall = maze[position.x+1][position.y] ? true : false
+
+  if (isThereWall) {
+    throw new Error(MoveResult.InValidMove)
+  } else {
+    const nextPosition = { x: position.x+1, y: position.y }
+    let robotBattery = robot.getBattery()
+    if (isThereReward(nextPosition)) {
+      robotBattery += 1
+      robot.setBattery(robotBattery)
+    }
+    if (isThereBomb(nextPosition)) {
+      robotBattery -= 1
+      robot.setBattery(robotBattery)
+    }
+    robot.setPosition(nextPosition)
+    throw new Error(MoveResult.ValidMove)
+  }
 }
 
 function moveLeft (): string {
-  // validate walls, rewards && bombs
-  // set the new position
-  return MoveResult.InValidMove
+  const position = robot.getPosition()
+  const isThereWall = maze[position.x][position.y-1] ? true : false
+
+  if (isThereWall) {
+    throw new Error(MoveResult.InValidMove)
+  } else {
+    const nextPosition = { x: position.x, y: position.y-1 }
+    let robotBattery = robot.getBattery()
+    if (isThereReward(nextPosition)) {
+      robotBattery += 1
+      robot.setBattery(robotBattery)
+    }
+    if (isThereBomb(nextPosition)) {
+      robotBattery -= 1
+      robot.setBattery(robotBattery)
+    }
+    robot.setPosition(nextPosition)
+    throw new Error(MoveResult.ValidMove)
+  }
 }
 
 function moveRight (): string {
