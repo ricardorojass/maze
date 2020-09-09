@@ -1,18 +1,22 @@
 export interface IMaze {
-  addWall(p: Position): void
-  addBomb(p: Position): Position
-  addReward(p: Position): Position
-  getPosition(): Position
+  addWall(p: IPosition): void
+  addBomb(p: number[]): void
+  addReward(p: number[]): void
   getRobot(): IRobot
-  moveUp(): IMovementResult
-  moveDown(): IMovementResult
-  moveLeft(): IMovementResult
-  moveRight(): IMovementResult
+  getMaze(): boolean[][]
+  getBombs(): boolean[][]
+  getRewards(): boolean[][]
+  moveUp(): string
+  moveDown(): string
+  moveLeft(): string
+  moveRight(): string
 }
 
 export interface IRobot {
-  position: Position
-  battery: number
+  getPosition(): IPosition
+  setPosition(p: IPosition): IPosition
+  getBattery(): number
+  setBattery(value: number): void
 }
 
 export interface IPosition {
@@ -21,8 +25,8 @@ export interface IPosition {
 }
 
 export interface IMovementResult {
-  validMove: string
-  invalidMove: string
+  validMove?: string
+  invalidMove?: string
 }
 
 export enum MoveResult {
