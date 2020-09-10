@@ -3,6 +3,6 @@
 
 #### UML diagram
 
-<div style="width:500px;">
-  ![UML diagram](files/UML.png)
-</div>
+
+<img src="/files/UML.png" alt="UML diagram"
+	title="A uml diagram" width="400" />
