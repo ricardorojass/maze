@@ -1,15 +1,14 @@
 import { IPosition, IRobot } from "./types";
 
 function createRobot (p: number[]): IRobot {
-  const [ x, y ] = p
-  let position = { x, y }
+  let position = p
   let battery = 5
 
-  function getPosition (): IPosition {
+  function getPosition (): number[] {
     return position
   }
 
-  function setPosition (p: IPosition): IPosition {
+  function setPosition (p: number[]): number[] {
     position = p
     return position
   }
