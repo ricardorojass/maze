@@ -1,23 +1,26 @@
 import {
   IMaze,
+  IWall,
+  MazeProps,
   IRobot,
-  MoveResult,
-  IPosition,
-  IMovementResult
+  OperationType,
+  IObstacleBase,
+  Obstacle
 } from './types'
 import createRobot from './robot'
+import createBatteryReward from './batteryReward'
+import createBatteryBomb from './batteryBomb'
+import createWall from './wall'
 
-let maze: boolean[][] = []
-let bombs: boolean[][] = []
-let rewards: boolean[][] = []
+let maze: any[][] = []
 let robot: IRobot
 
-function createMaze (dimension: number[], initialPos: number[], endPos: number[]): IMaze {
-  const [ rows, cols ] = dimension
-  maze = Array.from({length: rows}, () => Array.from({length: cols}, () => false))
-  bombs = Array.from({length: rows}, () => Array.from({length: cols}, () => false))
-  rewards = Array.from({length: rows}, () => Array.from({length: cols}, () => false))
-  robot = createRobot(initialPos)
+function createMaze (mazeProps: MazeProps): IMaze {
+  const [ rows, cols ] = mazeProps.dimension
+  // Refactor utilizar una sola matriz, representado con varios tipos
+  maze = Array.from({length: rows}, () => Array.from({length: cols}, () => undefined))
+
+  robot = createRobot(mazeProps.initialPos)
 
   return {
     addWall,
@@ -25,8 +28,7 @@ function createMaze (dimension: number[], initialPos: number[], endPos: number[]
     addReward,
     getRobot,
     getMaze,
-    getBombs,
-    getRewards,
+    getReward,
     moveUp,
     moveDown,
     moveLeft,
@@ -34,136 +36,118 @@ function createMaze (dimension: number[], initialPos: number[], endPos: number[]
   }
 }
 
-function addWall (p: IPosition): void {
-  maze[p.x][p.y] = true
+function addWall (wall: IWall = createWall(Obstacle.Wall), p: number[]): string {
+  const [x, y] = p
+  wall.setPosition([x,y])
+  maze[x][y] = wall
+  throw new Error(OperationType.WallAdded)
 }
 
-function addBomb (p: number[]): void {
+function addBomb (bomb: IObstacleBase = createBatteryBomb(Obstacle.Bomb), p: number[]): string {
   const [ x, y ] = p
-  bombs[x][y] = true
+  bomb.setPosition([x,y])
+  maze[x][y] = bomb
+  throw new Error(OperationType.BombAdded)
 }
 
-function addReward (p: number[]): void {
+function addReward (reward: IObstacleBase = createBatteryReward(Obstacle.Reward), p: number[]): string {
   const [ x, y ] = p
-  rewards[x][y] = true
+  reward.setPosition([x,y])
+  maze[x][y] = reward
+  throw new Error(OperationType.RewardAdded)
 }
 
 function getRobot (): IRobot {
   return robot
 }
 
-function getMaze (): boolean[][] {
+function getMaze (): string[][] {
   return maze
 }
 
-function getBombs (): boolean[][] {
-  return bombs
-}
-
-function getRewards (): boolean[][] {
-  return rewards
+function getReward (position: number[]): string {
+  const [x, y] = position
+  return maze[x][y]
 }
 
 function moveUp (): string {
-  const position = robot.getPosition()
-  const isThereWall = maze[position.x-1][position.y] ? true : false
 
-  if (isThereWall) {
-    throw new Error(MoveResult.InValidMove)
+  const [x, y] = robot.getPosition()
+  // Todo: Create Obstacle class
+  const obstacle = maze[x-1][y]
+
+  if (obstacle == Obstacle.Wall) {
+    throw new Error(OperationType.InValidMove)
   } else {
-    const nextPosition = { x: position.x-1, y: position.y }
-    let robotBattery = robot.getBattery()
-    if (isThereReward(nextPosition)) {
-      robotBattery += 1
-      robot.setBattery(robotBattery)
+    if (obstacle == Obstacle.Reward) {
+      obstacle.apply(robot)
     }
-    if (isThereBomb(nextPosition)) {
-      robotBattery -= 1
-      robot.setBattery(robotBattery)
+    // Todo: refactorizar B
+    if (obstacle == Obstacle.Bomb) {
+      obstacle.apply()
     }
-    robot.setPosition(nextPosition)
-    throw new Error(MoveResult.ValidMove)
+    robot.setPosition([x-1, y])
+    throw new Error(OperationType.ValidMove)
   }
 }
 
 function moveDown (): string {
-  const position = robot.getPosition()
-  const isThereWall = maze[position.x+1][position.y] ? true : false
+  const [x, y] = robot.getPosition()
+  // Todo: Create Obstacle class
+  const obstacle = maze[x+1][y]
 
-  if (isThereWall) {
-    throw new Error(MoveResult.InValidMove)
+  if (obstacle == Obstacle.Wall) {
+    throw new Error(OperationType.InValidMove)
   } else {
-    const nextPosition = { x: position.x+1, y: position.y }
-    let robotBattery = robot.getBattery()
-    if (isThereReward(nextPosition)) {
-      robotBattery += 1
-      robot.setBattery(robotBattery)
+    if (obstacle == Obstacle.Reward) {
+      obstacle.apply(robot)
     }
-    if (isThereBomb(nextPosition)) {
-      robotBattery -= 1
-      robot.setBattery(robotBattery)
+    if (obstacle == Obstacle.Bomb) {
+      obstacle.apply()
     }
-    robot.setPosition(nextPosition)
-    throw new Error(MoveResult.ValidMove)
+    robot.setPosition([x+1, y])
+    throw new Error(OperationType.ValidMove)
   }
 }
 
 function moveLeft (): string {
-  const position = robot.getPosition()
-  const isThereWall = maze[position.x][position.y-1] ? true : false
+  const [x, y] = robot.getPosition()
+  // Todo: Create Obstacle class
+  const obstacle = maze[x][y-1]
 
-  if (isThereWall) {
-    throw new Error(MoveResult.InValidMove)
+  if (obstacle == Obstacle.Wall) {
+    throw new Error(OperationType.InValidMove)
   } else {
-    const nextPosition = { x: position.x, y: position.y-1 }
-    let robotBattery = robot.getBattery()
-    if (isThereReward(nextPosition)) {
-      robotBattery += 1
-      robot.setBattery(robotBattery)
+    if (obstacle == Obstacle.Reward) {
+      obstacle.apply(robot)
     }
-    if (isThereBomb(nextPosition)) {
-      robotBattery -= 1
-      robot.setBattery(robotBattery)
+    // Todo: refactorizar B
+    if (obstacle == Obstacle.Bomb) {
+      obstacle.apply()
     }
-    robot.setPosition(nextPosition)
-    throw new Error(MoveResult.ValidMove)
+    robot.setPosition([x, y-1])
+    throw new Error(OperationType.ValidMove)
   }
 }
 
 function moveRight (): string {
-  // validate walls, rewards && bombs
-  const position = robot.getPosition()
-  const isThereWall = maze[position.x][position.y+1] ? true : false
-  if (isThereWall) {
-    throw new Error(MoveResult.InValidMove)
+  const [x, y] = robot.getPosition()
+  // Todo: Create Obstacle class
+  const obstacle = maze[x][y+1]
+
+  if (obstacle == Obstacle.Wall) {
+    throw new Error(OperationType.InValidMove)
   } else {
-    const nextPosition = { x: position.x, y: position.y+1 }
-    let robotBattery = robot.getBattery()
-    if (isThereReward(nextPosition)) {
-      robotBattery += 1
-      robot.setBattery(robotBattery)
+    if (obstacle == Obstacle.Reward) {
+      obstacle.apply(robot)
     }
-    if (isThereBomb(nextPosition)) {
-      robotBattery -= 1
-      robot.setBattery(robotBattery)
+    // Todo: refactorizar B
+    if (obstacle == Obstacle.Bomb) {
+      obstacle.apply()
     }
-    robot.setPosition(nextPosition)
-    throw new Error(MoveResult.ValidMove)
+    robot.setPosition([x, y+1])
+    throw new Error(OperationType.ValidMove)
   }
-}
-
-function isThereReward(nextRobotPosition: IPosition): boolean {
-  const { x, y } = nextRobotPosition
-  const reward = rewards[x][y]
-
-  return reward
-}
-
-function isThereBomb(nextRobotPosition: IPosition): boolean {
-  const { x, y } = nextRobotPosition
-  const bomb = bombs[x][y]
-
-  return bomb
 }
 
 export default createMaze
