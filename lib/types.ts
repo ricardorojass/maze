@@ -51,11 +51,6 @@ export interface RewardStrategy {
   apply(): string
 }
 
-export interface AbstractFactoryReward {
-  batteryReward(p: number[]): RewardStrategy
-  doubleBatteryReward(p: number[]): RewardStrategy
-}
-
 export enum OperationType {
   BombAdded = 'bomb added',
   RewardAdded = 'reward added',
