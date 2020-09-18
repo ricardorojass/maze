@@ -47,13 +47,13 @@ export interface IObstacleBase {
   apply(robot: IRobot): string
 }
 
-export interface RewardBase {
+export interface RewardStrategy {
   apply(): string
 }
 
 export interface AbstractFactoryReward {
-  batteryReward(p: number[]): RewardBase
-  doubleBatteryReward(p: number[]): RewardBase
+  batteryReward(p: number[]): RewardStrategy
+  doubleBatteryReward(p: number[]): RewardStrategy
 }
 
 export enum OperationType {
