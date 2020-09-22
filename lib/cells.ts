@@ -30,7 +30,7 @@ export function createWall (): Cell {
 export function createBatteryReward (): Item {
 
   function getType (): CellType {
-    return CellType.Obstacle
+    return CellType.Reward
   }
 
   function apply (robot: IRobot): void {

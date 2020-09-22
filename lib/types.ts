@@ -1,5 +1,6 @@
 export interface IMaze {
   addWall(p: number[]): void
+  addReward(p: number[]): void
   addObstacle(obstacle: Item, p: number[]): void
   getRobot(): IRobot
   getMaze(): Cell[][]
@@ -51,5 +52,6 @@ export enum OperationType {
 export enum CellType {
   Empty,
   Wall,
+  Reward,
   Obstacle,
 }
