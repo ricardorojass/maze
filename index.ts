@@ -38,7 +38,9 @@ async function main () {
   generateWallByRow(9, maze)
 
   maze.addReward([5, 1])
-  maze.addObstacle(createBatteryBomb(), [2, 4])
+  maze.addReward([5, 2])
+  maze.addObstacle(createBatteryBomb(), [5, 3])
+  maze.addObstacle(createBatteryBomb(), [4, 3])
 
   console.log(robot.getPosition())
 
@@ -54,7 +56,7 @@ async function main () {
     maze.moveRight()
     console.log(OperationType.ValidMove)
   } catch (err) {
-    if (err.name == OperationType.InValidMove) {
+    if (err.message == OperationType.InValidMove) {
       console.log(OperationType.InValidMove)
     }
   }
@@ -62,14 +64,22 @@ async function main () {
     maze.moveRight()
     console.log(OperationType.ValidMove)
   } catch (err) {
-    if (err.name == OperationType.InValidMove) {
+    if (err.message == OperationType.InValidMove) {
+      console.log(OperationType.InValidMove)
+    }
+  }
+  try {
+    maze.moveUp()
+    console.log(OperationType.ValidMove)
+  } catch (err) {
+    if (err.message == OperationType.InValidMove) {
       console.log(OperationType.InValidMove)
     }
   }
 
 
-  console.log(robot.getBattery())
-  console.log(robot.getPosition())
+  console.log('battery: ',robot.getBattery())
+  console.log('position: ',robot.getPosition())
 
 }
 

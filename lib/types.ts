@@ -19,6 +19,10 @@ export interface Item {
   apply(robot: IRobot): void
 }
 
+export interface Actionable {
+  apply(robot: IRobot): void
+}
+
 export interface MazeProps {
   dimension: number[]
   initialPos: number[]
