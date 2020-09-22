@@ -3,12 +3,16 @@
 import {
   IMaze,
   OperationType,
-  Obstacle,
+  CellType,
 } from "./lib/types"
+import {
+  createWall,
+  createBatteryBomb,
+  createBatteryReward
+} from './lib/cells'
+
 import createMaze from './lib/maze'
-import createBatteryReward from './lib/batteryReward'
-import createBatteryBomb from "./lib/batteryBomb"
-import createWall from "./lib/wall"
+
 const minimist = require('minimist')
 
 const argv = minimist(process.argv.slice(2))
@@ -33,51 +37,36 @@ async function main () {
   generateWallByRow(8, maze)
   generateWallByRow(9, maze)
 
-  try {
-    maze.addReward(createBatteryReward(Obstacle.Reward), [5, 1])
-  } catch (err) {
-    if (err.message == OperationType.RewardAdded) {
-      console.log(OperationType.RewardAdded)
-    }
-  }
-
-  try {
-    maze.addBomb(createBatteryBomb(Obstacle.Bomb), [2, 4])
-  } catch (err) {
-    if (err.message == OperationType.RewardAdded) {
-      console.log(OperationType.RewardAdded)
-    }
-  }
+  maze.addObstacle(createBatteryReward(), [5, 1])
+  maze.addObstacle(createBatteryBomb(), [2, 4])
 
   console.log(robot.getPosition())
 
   try {
     maze.moveRight()
+    console.log(OperationType.ValidMove)
   } catch (err) {
-    if (err.message == OperationType.ValidMove) {
-      console.log(OperationType.ValidMove)
-    } else {
+    if (err.name == OperationType.InValidMove) {
       console.log(OperationType.InValidMove)
     }
   }
   try {
     maze.moveRight()
+    console.log(OperationType.ValidMove)
   } catch (err) {
-    if (err.message == OperationType.ValidMove) {
-      console.log(OperationType.ValidMove)
-    } else {
+    if (err.name == OperationType.InValidMove) {
       console.log(OperationType.InValidMove)
     }
   }
   try {
     maze.moveRight()
+    console.log(OperationType.ValidMove)
   } catch (err) {
-    if (err.message == OperationType.ValidMove) {
-      console.log(OperationType.ValidMove)
-    } else {
+    if (err.name == OperationType.InValidMove) {
       console.log(OperationType.InValidMove)
     }
   }
+
 
   console.log(robot.getBattery())
   console.log(robot.getPosition())
@@ -86,14 +75,7 @@ async function main () {
 
 function generateWallByRow(row: number, maze: IMaze) {
   for (let j = 0; j < 10; j++) {
-    try {
-      maze.addWall(createWall(Obstacle.Wall), [row, j])
-    } catch (err) {
-      if (err.message == OperationType.WallAdded) {
-        console.log(OperationType.WallAdded)
-      }
-    }
-
+    maze.addWall([row, j])
   }
 }
 

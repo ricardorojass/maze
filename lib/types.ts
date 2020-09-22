@@ -1,20 +1,21 @@
 export interface IMaze {
-  addWall(wall: IWall, p: number[]): string
-  addBomb(bomb: IObstacleBase, p: number[]): string
-  addReward(reward: IObstacleBase, p: number[]): string
+  addWall(p: number[]): void
+  addObstacle(obstacle: Item, p: number[]): void
   getRobot(): IRobot
-  getMaze(): string[][]
-  getReward(position: number[]): string
-  moveUp(): string
-  moveDown(): string
-  moveLeft(): string
-  moveRight(): string
+  getMaze(): Cell[][]
+  moveUp(): void
+  moveDown(): void
+  moveLeft(): void
+  moveRight(): void
 }
 
-export interface IWall {
-  getType(): Obstacle
-  getPosition(): void
-  setPosition(p: number[]): void
+export interface Cell {
+  getType(): CellType
+}
+
+export interface Item {
+  getType(): CellType
+  apply(robot: IRobot): void
 }
 
 export interface MazeProps {
@@ -25,26 +26,14 @@ export interface MazeProps {
 
 export interface IRobot {
   getPosition(): number[]
-  setPosition(p: number[]): number[]
+  setPosition(p: number[]): void
   getBattery(): number
   setBattery(value: number): void
-}
-
-export interface IPosition {
-  x: number
-  y: number
 }
 
 export interface IMovementResult {
   validMove?: string
   invalidMove?: string
-}
-
-export interface IObstacleBase {
-  getType(): Obstacle
-  getPosition(): number[]
-  setPosition(p: number[]): void
-  apply(robot: IRobot): string
 }
 
 export interface RewardStrategy {
@@ -59,9 +48,8 @@ export enum OperationType {
   InValidMove = 'invalid move',
 }
 
-export enum Obstacle {
+export enum CellType {
+  Empty,
   Wall,
-  NoWall,
-  Bomb,
-  Reward,
+  Obstacle,
 }
