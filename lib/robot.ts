@@ -1,4 +1,4 @@
-import { IPosition, IRobot } from "./types";
+import { IRobot } from "./types";
 
 function createRobot (p: number[]): IRobot {
   let position = p
@@ -8,9 +8,8 @@ function createRobot (p: number[]): IRobot {
     return position
   }
 
-  function setPosition (p: number[]): number[] {
+  function setPosition (p: number[]): void {
     position = p
-    return position
   }
 
   function getBattery (): number {
