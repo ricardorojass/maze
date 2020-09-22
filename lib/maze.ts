@@ -14,7 +14,7 @@ import {
 } from './cells'
 import { MovementError } from './errors'
 
-let maze: Cell[][] | Item[][] = []
+let maze: Cell[][] & Item[][] = []
 let robot: IRobot
 
 function createMaze (mazeProps: MazeProps): IMaze {
@@ -68,86 +68,73 @@ function moveUp (): void {
   const [x, y] = robot.getPosition()
   // Todo: Create Obstacle class
   const itemInNextPos = maze[x-1][y]
+  const itemType = itemInNextPos.getType()
 
-  if (!itemInNextPos) {
-    robot.setPosition([x-1, y])
-    // Todo, remove throw
-    throw new MovementError(OperationType.ValidMove)
+  if (itemType == CellType.Wall) {
+    throw new MovementError(OperationType.InValidMove)
   } else {
-    const itemType = itemInNextPos.getType()
-    if (itemType == CellType.Wall) {
-      throw new MovementError(OperationType.InValidMove)
-    } else {
-      if (itemType == CellType.Reward) {
-        itemInNextPos.apply(robot)
-      }
-      if (itemType == CellType.Obstacle) {
-        itemInNextPos.apply(robot)
-      }
+    if (itemType == CellType.Reward) {
+      itemInNextPos.apply(robot)
     }
+    if (itemType == CellType.Obstacle) {
+      itemInNextPos.apply(robot)
+    }
+    robot.setPosition([x-1, y])
   }
 }
 
 function moveDown (): void {
   const [x, y] = robot.getPosition()
-  // Todo: Create Obstacle class
   const itemInNextPos = maze[x+1][y]
+  const itemType = itemInNextPos.getType()
 
-  if (!itemInNextPos) {
-    robot.setPosition([x-1, y])
-    // Todo, remove throw
-    throw new MovementError(OperationType.ValidMove)
+  if (itemType == CellType.Wall) {
+    throw new MovementError(OperationType.InValidMove)
   } else {
-    const itemType = itemInNextPos.getType()
-    if (itemType == CellType.Wall) {
-      throw new MovementError(OperationType.InValidMove)
-    } else {
-      if (itemType == CellType.Obstacle) {
-        itemInNextPos.apply(robot)
-      }
+    if (itemType == CellType.Reward) {
+      itemInNextPos.apply(robot)
     }
+    if (itemType == CellType.Obstacle) {
+      itemInNextPos.apply(robot)
+    }
+    robot.setPosition([x+1, y])
   }
 }
 
 function moveLeft (): void {
   const [x, y] = robot.getPosition()
-  // Todo: Create Obstacle class
   const itemInNextPos = maze[x][y-1]
+  const itemType = itemInNextPos.getType()
 
-  if (!itemInNextPos) {
-    robot.setPosition([x-1, y])
-    // Todo, remove throw
-    throw new MovementError(OperationType.ValidMove)
+  if (itemType == CellType.Wall) {
+    throw new MovementError(OperationType.InValidMove)
   } else {
-    const itemType = itemInNextPos.getType()
-    if (itemType == CellType.Wall) {
-      throw new MovementError(OperationType.InValidMove)
-    } else {
-      if (itemType == CellType.Obstacle) {
-        itemInNextPos.apply(robot)
-      }
+    if (itemType == CellType.Reward) {
+      itemInNextPos.apply(robot)
     }
+    if (itemType == CellType.Obstacle) {
+      itemInNextPos.apply(robot)
+    }
+    robot.setPosition([x, y-1])
   }
 }
 
 function moveRight (): void {
   const [x, y] = robot.getPosition()
-  // Todo: Create Obstacle class
   const itemInNextPos = maze[x][y+1]
+  const itemType = itemInNextPos.getType()
 
-  if (!itemInNextPos) {
-    robot.setPosition([x-1, y])
-    // Todo, remove throw
-    throw new MovementError(OperationType.ValidMove)
+  if (itemType == CellType.Wall) {
+    throw new MovementError(OperationType.InValidMove)
   } else {
-    const itemType = itemInNextPos.getType()
-    if (itemType == CellType.Wall) {
-      throw new MovementError(OperationType.InValidMove)
-    } else {
-      if (itemType == CellType.Obstacle) {
-        itemInNextPos.apply(robot)
-      }
+
+    if (itemType == CellType.Reward) {
+      itemInNextPos.apply(robot)
     }
+    if (itemType == CellType.Obstacle) {
+      itemInNextPos.apply(robot)
+    }
+    robot.setPosition([x, y+1])
   }
 }
 

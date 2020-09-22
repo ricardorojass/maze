@@ -1,29 +1,36 @@
 import {
   Item,
   Cell,
+  IRobot,
   CellType,
-  IRobot
+  Actionable
 } from './types'
 
-export function createEmptyCell(): Cell {
+export function createEmptyCell(): Cell & Actionable {
 
   function getType (): CellType {
     return CellType.Empty
   }
 
+  function apply (): void {}
+
   return {
     getType,
+    apply
   }
 }
 
-export function createWall (): Cell {
+export function createWall (): Cell & Actionable {
 
   function getType (): CellType {
     return CellType.Wall
   }
 
+  function apply (): void {}
+
   return {
     getType,
+    apply
   }
 }
 
@@ -51,11 +58,10 @@ export function createBatteryBomb (): Item {
     return CellType.Obstacle
   }
 
-  function apply (robot: IRobot): string {
+  function apply (robot: IRobot): void {
     let robotBattery = robot.getBattery()
     robotBattery -= 1
     robot.setBattery(robotBattery)
-    throw new Error(`Robot battery is now ${robot.getBattery()}`)
   }
 
   return {
