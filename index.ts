@@ -37,7 +37,7 @@ async function main () {
   generateWallByRow(8, maze)
   generateWallByRow(9, maze)
 
-  maze.addObstacle(createBatteryReward(), [5, 1])
+  maze.addReward([5, 1])
   maze.addObstacle(createBatteryBomb(), [2, 4])
 
   console.log(robot.getPosition())

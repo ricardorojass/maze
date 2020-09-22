@@ -10,7 +10,7 @@ import {
 import createRobot from './robot'
 import {
   createWall,
-  createEmptyCell
+  createEmptyCell, createBatteryReward
 } from './cells'
 import { MovementError } from './errors'
 
@@ -26,6 +26,7 @@ function createMaze (mazeProps: MazeProps): IMaze {
 
   return {
     addWall,
+    addReward,
     addObstacle,
     getRobot,
     getMaze,
@@ -46,6 +47,12 @@ function addObstacle (obstacle: Item, p: number[]): void {
   // validar la posicion y lanzar error si hay
   const [ x, y ] = p
   maze[x][y] = obstacle
+}
+
+function addReward (p: number[]): void {
+  // validar la posicion y lanzar error si hay
+  const [ x, y ] = p
+  maze[x][y] = createBatteryReward()
 }
 
 function getRobot (): IRobot {
@@ -71,6 +78,9 @@ function moveUp (): void {
     if (itemType == CellType.Wall) {
       throw new MovementError(OperationType.InValidMove)
     } else {
+      if (itemType == CellType.Reward) {
+        itemInNextPos.apply(robot)
+      }
       if (itemType == CellType.Obstacle) {
         itemInNextPos.apply(robot)
       }
