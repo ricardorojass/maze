@@ -1,3 +1,24 @@
+export interface MazeBuilder {
+  addWall(p: number[]): MazeBuilder
+  addReward(p: number[]): MazeBuilder
+  addObstacle(obstacle: Item, p: number[]): MazeBuilder
+  build(): Maze
+}
+
+export interface Maze {
+  moveUp(): void
+  moveDown(): void
+  moveLeft(): void
+  moveRight(): void
+  getRobot(): IRobot
+}
+
+export interface MazeOptions {
+  dimension: number[]
+  initialPos: number[]
+  endPos: number[]
+}
+
 export interface IMaze {
   addWall(p: number[]): void
   addReward(p: number[]): void
