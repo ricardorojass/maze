@@ -1,11 +1,17 @@
 'use-strict'
 
 import {
-  OperationType
+  IMaze,
+  OperationType,
+  CellType,
 } from "./lib/types"
+import {
+  createWall,
+  createBatteryBomb,
+  createBatteryReward
+} from './lib/cells'
 
-import { mazeBuilder } from "./lib/mazeBuilder"
-import { createBatteryBomb } from "./lib/cells"
+import createMaze from './lib/maze'
 
 const minimist = require('minimist')
 
@@ -16,32 +22,28 @@ const argv = minimist(process.argv.slice(2))
 async function main () {
   const command = argv._.shift()
 
-  const mazeOptions = {
+  const mazeProperties = {
     dimension: [10, 10],
-    initialPos: [3, 0],
-    endPos: [1, 3],
+    initialPos: [5, 0],
+    endPos: [2, 9],
   }
 
-  const maze = mazeBuilder(mazeOptions)
-    .addWall([0, 0])
-    .addWall([0, 1])
-    .addWall([0, 2])
-    .addWall([0, 3])
-    .addWall([1, 0])
-    .addWall([2, 0])
-    .addWall([2, 2])
-    .addWall([2, 3])
-    .addWall([3, 2])
-    .addWall([3, 3])
-    .addReward([3, 1])
-    .addObstacle(createBatteryBomb(), [2,1])
-    .addObstacle(createBatteryBomb(), [1,1])
-    .addObstacle(createBatteryBomb(), [1,2])
-    .build()
+  const maze: IMaze = createMaze(mazeProperties)
 
   const robot = maze.getRobot()
-  console.log('initial position: ', robot.getPosition())
-  console.log('initial battery: ', robot.getBattery())
+  generateWallByRow(0, maze)
+  generateWallByRow(1, maze)
+  generateWallByRow(6, maze)
+  generateWallByRow(7, maze)
+  generateWallByRow(8, maze)
+  generateWallByRow(9, maze)
+
+  maze.addReward([5, 1])
+  maze.addReward([5, 2])
+  maze.addObstacle(createBatteryBomb(), [5, 3])
+  maze.addObstacle(createBatteryBomb(), [4, 3])
+
+  console.log(robot.getPosition())
 
   try {
     maze.moveRight()
@@ -52,15 +54,7 @@ async function main () {
     }
   }
   try {
-    maze.moveUp()
-    console.log(OperationType.ValidMove)
-  } catch (err) {
-    if (err.message == OperationType.InValidMove) {
-      console.log(OperationType.InValidMove)
-    }
-  }
-  try {
-    maze.moveUp()
+    maze.moveRight()
     console.log(OperationType.ValidMove)
   } catch (err) {
     if (err.message == OperationType.InValidMove) {
@@ -75,11 +69,25 @@ async function main () {
       console.log(OperationType.InValidMove)
     }
   }
+  try {
+    maze.moveUp()
+    console.log(OperationType.ValidMove)
+  } catch (err) {
+    if (err.message == OperationType.InValidMove) {
+      console.log(OperationType.InValidMove)
+    }
+  }
 
 
-  console.log('Robot battery: ',robot.getBattery())
-  console.log('End position: ',robot.getPosition())
+  console.log('battery: ',robot.getBattery())
+  console.log('position: ',robot.getPosition())
 
+}
+
+function generateWallByRow(row: number, maze: IMaze) {
+  for (let j = 0; j < 10; j++) {
+    maze.addWall([row, j])
+  }
 }
 
 main().catch(err => console.log(err))
